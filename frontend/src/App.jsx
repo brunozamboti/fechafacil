@@ -16,21 +16,28 @@ function App() {
   setCaixas(dados);
 }
 
-  function cadastrarCaixa(event) {
-    event.preventDefault();
+async function cadastrarCaixa(event) {
+  event.preventDefault();
 
-    if (nomeCaixa.trim() === '') {
-      return;
-    }
-
-    const novoCaixa = {
-      id: Date.now(),
-      nome: nomeCaixa
-    };
-
-    setCaixas([...caixas, novoCaixa]);
-    setNomeCaixa('');
+  if (nomeCaixa.trim() === '') {
+    return;
   }
+
+  const resposta = await fetch('http://localhost:8080/caixas', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nome: nomeCaixa.trim()
+    })
+  });
+
+  const novoCaixa = await resposta.json();
+
+  setCaixas([...caixas, novoCaixa]);
+  setNomeCaixa('');
+}
 
   return (
     <main>
