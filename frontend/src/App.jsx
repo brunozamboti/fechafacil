@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const [caixas, setCaixas] = useState([]);
+  const [caixaEditandoId, setCaixaEditandoId] = useState(null);
 
   useEffect(() => {
     carregarCaixas();
@@ -23,6 +24,34 @@ function App() {
       return;
     }
 
+    if (caixaEditandoId !== null) {
+      const resposta = await fetch(
+        `http://localhost:8080/caixas/${caixaEditandoId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nome: nomeCaixa.trim()
+          })
+        }
+      );
+
+      const caixaAtualizado = await resposta.json();
+
+      setCaixas(
+        caixas.map((caixa) =>
+          caixa.id === caixaEditandoId ? caixaAtualizado : caixa
+        )
+      );
+
+      setNomeCaixa('');
+      setCaixaEditandoId(null);
+
+      return;
+    }
+
     const resposta = await fetch('http://localhost:8080/caixas', {
       method: 'POST',
       headers: {
@@ -37,6 +66,11 @@ function App() {
 
     setCaixas([...caixas, novoCaixa]);
     setNomeCaixa('');
+  }
+
+  function iniciarEdicao(caixa) {
+    setCaixaEditandoId(caixa.id);
+    setNomeCaixa(caixa.nome);
   }
 
   async function excluirCaixa(id) {
@@ -68,7 +102,9 @@ function App() {
             onChange={(event) => setNomeCaixa(event.target.value)}
           />
 
-          <button type="submit">Cadastrar</button>
+          <button type="submit">
+            {caixaEditandoId === null ? 'Cadastrar' : 'Salvar'}
+          </button>
         </form>
 
         <h3>Caixas cadastrados</h3>
@@ -80,6 +116,13 @@ function App() {
             {caixas.map((caixa) => (
               <li key={caixa.id}>
                 {caixa.nome}
+
+                <button
+                  type="button"
+                  onClick={() => iniciarEdicao(caixa)}
+                >
+                  Editar
+                </button>
 
                 <button
                   type="button"
