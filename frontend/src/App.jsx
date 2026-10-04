@@ -1,9 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const [caixas, setCaixas] = useState([]);
+
+  useEffect(() => {
+  carregarCaixas();
+}, []);
+
+  async function carregarCaixas() {
+  const resposta = await fetch('http://localhost:8080/caixas');
+  const dados = await resposta.json();
+
+  setCaixas(dados);
+}
 
   function cadastrarCaixa(event) {
     event.preventDefault();
