@@ -1,12 +1,64 @@
+import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [nomeCaixa, setNomeCaixa] = useState('');
+  const [caixas, setCaixas] = useState([]);
+
+  function cadastrarCaixa(event) {
+    event.preventDefault();
+
+    if (nomeCaixa.trim() === '') {
+      return;
+    }
+
+    const novoCaixa = {
+      id: Date.now(),
+      nome: nomeCaixa
+    };
+
+    setCaixas([...caixas, novoCaixa]);
+    setNomeCaixa('');
+  }
+
   return (
     <main>
-      <h1>FechaFácil</h1>
-      <p>Sistema de apoio ao fechamento e conferência de caixa.</p>
+      <header>
+        <h1>FechaFácil</h1>
+        <p>Sistema de apoio ao fechamento e conferência de caixa.</p>
+      </header>
+
+      <section>
+        <h2>Caixas</h2>
+
+        <form onSubmit={cadastrarCaixa}>
+          <label htmlFor="nomeCaixa">Nome do caixa</label>
+
+          <input
+            id="nomeCaixa"
+            type="text"
+            placeholder="Ex.: Caixa 01"
+            value={nomeCaixa}
+            onChange={(event) => setNomeCaixa(event.target.value)}
+          />
+
+          <button type="submit">Cadastrar</button>
+        </form>
+
+        <h3>Caixas cadastrados</h3>
+
+        {caixas.length === 0 ? (
+          <p>Nenhum caixa cadastrado.</p>
+        ) : (
+          <ul>
+            {caixas.map((caixa) => (
+              <li key={caixa.id}>{caixa.nome}</li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
-  )
+  );
 }
 
 export default App;
