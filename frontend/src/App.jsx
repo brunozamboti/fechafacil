@@ -6,38 +6,46 @@ function App() {
   const [caixas, setCaixas] = useState([]);
 
   useEffect(() => {
-  carregarCaixas();
-}, []);
+    carregarCaixas();
+  }, []);
 
   async function carregarCaixas() {
-  const resposta = await fetch('http://localhost:8080/caixas');
-  const dados = await resposta.json();
+    const resposta = await fetch('http://localhost:8080/caixas');
+    const dados = await resposta.json();
 
-  setCaixas(dados);
-}
-
-async function cadastrarCaixa(event) {
-  event.preventDefault();
-
-  if (nomeCaixa.trim() === '') {
-    return;
+    setCaixas(dados);
   }
 
-  const resposta = await fetch('http://localhost:8080/caixas', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      nome: nomeCaixa.trim()
-    })
-  });
+  async function cadastrarCaixa(event) {
+    event.preventDefault();
 
-  const novoCaixa = await resposta.json();
+    if (nomeCaixa.trim() === '') {
+      return;
+    }
 
-  setCaixas([...caixas, novoCaixa]);
-  setNomeCaixa('');
-}
+    const resposta = await fetch('http://localhost:8080/caixas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nome: nomeCaixa.trim()
+      })
+    });
+
+    const novoCaixa = await resposta.json();
+
+    setCaixas([...caixas, novoCaixa]);
+    setNomeCaixa('');
+  }
+
+  async function excluirCaixa(id) {
+    await fetch(`http://localhost:8080/caixas/${id}`, {
+      method: 'DELETE'
+    });
+
+    setCaixas(caixas.filter((caixa) => caixa.id !== id));
+  }
 
   return (
     <main>
@@ -70,7 +78,16 @@ async function cadastrarCaixa(event) {
         ) : (
           <ul>
             {caixas.map((caixa) => (
-              <li key={caixa.id}>{caixa.nome}</li>
+              <li key={caixa.id}>
+                {caixa.nome}
+
+                <button
+                  type="button"
+                  onClick={() => excluirCaixa(caixa.id)}
+                >
+                  Excluir
+                </button>
+              </li>
             ))}
           </ul>
         )}
