@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import CaixaForm from './components/CaixaForm';
+import CaixaList from './components/CaixaList';
 
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
@@ -87,53 +89,24 @@ function App() {
         <h1>FechaFácil</h1>
         <p>Sistema de apoio ao fechamento e conferência de caixa.</p>
       </header>
+      <CaixaForm
+        nomeCaixa={nomeCaixa}
+        setNomeCaixa={setNomeCaixa}
+        caixaEditandoId={caixaEditandoId}
+        cadastrarCaixa={cadastrarCaixa}
+      />
+
+      <CaixaList
+        caixas={caixas}
+        iniciarEdicao={iniciarEdicao}
+        excluirCaixa={excluirCaixa} />
 
       <section>
         <h2>Caixas</h2>
 
-        <form onSubmit={cadastrarCaixa}>
-          <label htmlFor="nomeCaixa">Nome do caixa</label>
 
-          <input
-            id="nomeCaixa"
-            type="text"
-            placeholder="Ex.: Caixa 01"
-            value={nomeCaixa}
-            onChange={(event) => setNomeCaixa(event.target.value)}
-          />
 
-          <button type="submit">
-            {caixaEditandoId === null ? 'Cadastrar' : 'Salvar'}
-          </button>
-        </form>
 
-        <h3>Caixas cadastrados</h3>
-
-        {caixas.length === 0 ? (
-          <p>Nenhum caixa cadastrado.</p>
-        ) : (
-          <ul>
-            {caixas.map((caixa) => (
-              <li key={caixa.id}>
-                {caixa.nome}
-
-                <button
-                  type="button"
-                  onClick={() => iniciarEdicao(caixa)}
-                >
-                  Editar
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => excluirCaixa(caixa.id)}
-                >
-                  Excluir
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
     </main>
   );
