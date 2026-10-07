@@ -2,14 +2,19 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import CaixaForm from './components/CaixaForm';
 import CaixaList from './components/CaixaList';
+import MovimentacaoForm from './components/MovimentacaoForm';
+import MovimentacaoList from './components/MovimentacaoList';
 
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const [caixas, setCaixas] = useState([]);
   const [caixaEditandoId, setCaixaEditandoId] = useState(null);
 
+  const [movimentacoes, setMovimentacoes] = useState([]);
+
   useEffect(() => {
     carregarCaixas();
+    carregarMovimentacoes();
   }, []);
 
   async function carregarCaixas() {
@@ -17,6 +22,13 @@ function App() {
     const dados = await resposta.json();
 
     setCaixas(dados);
+  }
+
+  async function carregarMovimentacoes() {
+    const resposta = await fetch('http://localhost:8080/movimentacoes');
+    const dados = await resposta.json();
+
+    setMovimentacoes(dados);
   }
 
   async function cadastrarCaixa(event) {
@@ -101,13 +113,11 @@ function App() {
         iniciarEdicao={iniciarEdicao}
         excluirCaixa={excluirCaixa} />
 
-      <section>
-        <h2>Caixas</h2>
+      <MovimentacaoForm />
+
+      <MovimentacaoList movimentacoes={movimentacoes} />
 
 
-
-
-      </section>
     </main>
   );
 }
