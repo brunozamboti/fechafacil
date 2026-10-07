@@ -1,4 +1,7 @@
-function MovimentacaoList({ movimentacoes }) {
+function MovimentacaoList({
+    movimentacoes,
+    excluirMovimentacao
+}) {
     return (
         <div>
             <h3>Movimentações Cadastradas</h3>
@@ -14,6 +17,13 @@ function MovimentacaoList({ movimentacoes }) {
                             Descrição: {movimentacao.descricao} |
                             Data: {movimentacao.dataHora} |
                             Fechamento: {movimentacao.fechamento?.id}
+
+                            <button
+                                type="button"
+                                onClick={() => excluirMovimentacao(movimentacao.id)}
+                            >
+                                Excluir
+                            </button>
                         </li>
                     ))}
                 </ul>

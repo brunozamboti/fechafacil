@@ -145,6 +145,16 @@ function App() {
     setNomeCaixa(caixa.nome);
   }
 
+  async function excluirMovimentacao(id) {
+    await fetch(`http://localhost:8080/movimentacoes/${id}`, {
+      method: 'DELETE'
+    });
+
+    setMovimentacoes(
+      movimentacoes.filter((movimentacao) => movimentacao.id !== id)
+    );
+  }
+
   async function excluirCaixa(id) {
     await fetch(`http://localhost:8080/caixas/${id}`, {
       method: 'DELETE'
@@ -188,8 +198,10 @@ function App() {
         cadastrarMovimentacao={cadastrarMovimentacao}
       />
 
-      <MovimentacaoList movimentacoes={movimentacoes} />
-
+      <MovimentacaoList
+        movimentacoes={movimentacoes}
+        excluirMovimentacao={excluirMovimentacao}
+      />
 
     </main>
   );
