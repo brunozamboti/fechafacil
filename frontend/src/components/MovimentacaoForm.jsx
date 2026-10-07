@@ -12,6 +12,7 @@ function MovimentacaoForm({
     fechamentos,
     fechamentoSelecionadoId,
     setFechamentoSelecionadoId,
+    movimentacaoEditandoId,
     cadastrarMovimentacao
 }) {
     return (
@@ -89,7 +90,9 @@ function MovimentacaoForm({
                 </select>
 
                 <button type="submit">
-                    Cadastrar movimentação
+                    {movimentacaoEditandoId !== null
+                        ? 'Salvar'
+                        : 'Cadastrar movimentação'}
                 </button>
             </form>
 

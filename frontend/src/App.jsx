@@ -16,6 +16,7 @@ function App() {
   const [descricaoMovimentacao, setDescricaoMovimentacao] = useState('');
   const [dataMovimentacao, setDataMovimentacao] = useState('');
   const [horaMovimentacao, setHoraMovimentacao] = useState('');
+  const [movimentacaoEditandoId, setMovimentacaoEditandoId] = useState(null);
 
   const [fechamentos, setFechamentos] = useState([]);
   const [fechamentoSelecionadoId, setFechamentoSelecionadoId] = useState('');
@@ -112,6 +113,44 @@ function App() {
 
     const dataHora = `${dataMovimentacao}T${horaMovimentacao}:00`;
 
+    if (movimentacaoEditandoId !== null) {
+      const resposta = await fetch(
+        `http://localhost:8080/movimentacoes/${movimentacaoEditandoId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            tipo: tipoMovimentacao,
+            valor: Number(valorMovimentacao),
+            descricao: descricaoMovimentacao.trim(),
+            dataHora: dataHora
+          })
+        }
+      );
+
+      const movimentacaoAtualizada = await resposta.json();
+
+      setMovimentacoes(
+        movimentacoes.map((movimentacao) =>
+          movimentacao.id === movimentacaoEditandoId
+            ? movimentacaoAtualizada
+            : movimentacao
+        )
+      );
+
+      setTipoMovimentacao('ENTRADA');
+      setValorMovimentacao('');
+      setDescricaoMovimentacao('');
+      setDataMovimentacao('');
+      setHoraMovimentacao('');
+      setFechamentoSelecionadoId('');
+      setMovimentacaoEditandoId(null);
+
+      return;
+    }
+
     const resposta = await fetch('http://localhost:8080/movimentacoes', {
       method: 'POST',
       headers: {
@@ -138,6 +177,18 @@ function App() {
     setDataMovimentacao('');
     setHoraMovimentacao('');
     setFechamentoSelecionadoId('');
+  }
+
+  function iniciarEdicaoMovimentacao(movimentacao) {
+    const [data, horaCompleta] = movimentacao.dataHora.split('T');
+
+    setMovimentacaoEditandoId(movimentacao.id);
+    setTipoMovimentacao(movimentacao.tipo);
+    setValorMovimentacao(String(movimentacao.valor));
+    setDescricaoMovimentacao(movimentacao.descricao);
+    setDataMovimentacao(data);
+    setHoraMovimentacao(horaCompleta.slice(0, 5));
+    setFechamentoSelecionadoId(String(movimentacao.fechamento?.id ?? ''));
   }
 
   function iniciarEdicao(caixa) {
@@ -195,12 +246,14 @@ function App() {
         fechamentos={fechamentos}
         fechamentoSelecionadoId={fechamentoSelecionadoId}
         setFechamentoSelecionadoId={setFechamentoSelecionadoId}
+        movimentacaoEditandoId={movimentacaoEditandoId}
         cadastrarMovimentacao={cadastrarMovimentacao}
       />
 
       <MovimentacaoList
         movimentacoes={movimentacoes}
         excluirMovimentacao={excluirMovimentacao}
+        iniciarEdicaoMovimentacao={iniciarEdicaoMovimentacao}
       />
 
     </main>

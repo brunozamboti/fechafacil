@@ -1,6 +1,7 @@
 function MovimentacaoList({
     movimentacoes,
-    excluirMovimentacao
+    excluirMovimentacao,
+    iniciarEdicaoMovimentacao
 }) {
     return (
         <div>
@@ -17,6 +18,13 @@ function MovimentacaoList({
                             Descrição: {movimentacao.descricao} |
                             Data: {movimentacao.dataHora} |
                             Fechamento: {movimentacao.fechamento?.id}
+
+                            <button
+                                type="button"
+                                onClick={() => iniciarEdicaoMovimentacao(movimentacao)}
+                            >
+                                Editar
+                            </button>
 
                             <button
                                 type="button"
