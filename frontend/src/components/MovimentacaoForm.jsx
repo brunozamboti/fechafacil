@@ -9,9 +9,9 @@ function MovimentacaoForm({
     setDataMovimentacao,
     horaMovimentacao,
     setHoraMovimentacao,
-    fechamentos,
-    fechamentoSelecionadoId,
-    setFechamentoSelecionadoId,
+    fechamentosAbertos,
+    caixaMovimentacaoId,
+    setCaixaMovimentacaoId,
     movimentacaoEditandoId,
     cadastrarMovimentacao
 }) {
@@ -75,18 +75,21 @@ function MovimentacaoForm({
                     onChange={(event) => setHoraMovimentacao(event.target.value)}
                 />
 
-                <label htmlFor="fechamentoMovimentacao">Fechamento</label>
+                <label htmlFor="caixaMovimentacao">Caixa</label>
 
                 <select
-                    id="fechamentoMovimentacao"
-                    value={fechamentoSelecionadoId}
-                    onChange={(event) => setFechamentoSelecionadoId(event.target.value)}
+                    id="caixaMovimentacao"
+                    value={caixaMovimentacaoId}
+                    onChange={(event) => setCaixaMovimentacaoId(event.target.value)}
                 >
-                    <option value="">Selecione um fechamento</option>
+                    <option value="">Selecione um caixa aberto</option>
 
-                    {fechamentos.map((fechamento) => (
-                        <option key={fechamento.id} value={fechamento.id}>
-                            Fechamento {fechamento.id} - {fechamento.caixa?.nome}
+                    {fechamentosAbertos.map((fechamento) => (
+                        <option
+                            key={fechamento.id}
+                            value={fechamento.caixa?.id}
+                        >
+                            {fechamento.caixa?.nome}
                         </option>
                     ))}
                 </select>

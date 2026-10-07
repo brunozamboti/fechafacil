@@ -18,21 +18,37 @@ function FechamentoList({
                             Fechamento: {fechamento.id} |
                             Caixa: {fechamento.caixa?.nome} |
                             Valor de abertura: {formatarMoeda(fechamento.valorAbertura)} |
-                            Data de abertura: {fechamento.dataHoraAbertura}
+                            Data de abertura: {fechamento.dataHoraAbertura} |
+                            Status: {fechamento.dataHoraFechamento ? 'Fechado' : 'Aberto'}
 
-                            <button
-                                type="button"
-                                onClick={() => iniciarEdicaoFechamento(fechamento)}
-                            >
-                                Fechar caixa
-                            </button>
+                            {fechamento.dataHoraFechamento && (
+                                <>
+                                    {' | '}
+                                    Valor esperado: {formatarMoeda(fechamento.valorEsperado)}
+                                    {' | '}
+                                    Valor contado: {formatarMoeda(fechamento.valorContado)}
+                                    {' | '}
+                                    Diferença: {formatarMoeda(fechamento.diferenca)}
+                                </>
+                            )}
 
-                            <button
-                                type="button"
-                                onClick={() => excluirFechamento(fechamento.id)}
-                            >
-                                Excluir
-                            </button>
+                            {!fechamento.dataHoraFechamento && (
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={() => iniciarEdicaoFechamento(fechamento)}
+                                    >
+                                        Fechar caixa
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => excluirFechamento(fechamento.id)}
+                                    >
+                                        Excluir
+                                    </button>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>

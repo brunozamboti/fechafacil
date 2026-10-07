@@ -19,9 +19,9 @@ function App() {
   const [dataMovimentacao, setDataMovimentacao] = useState('');
   const [horaMovimentacao, setHoraMovimentacao] = useState('');
   const [movimentacaoEditandoId, setMovimentacaoEditandoId] = useState(null);
+  const [caixaMovimentacaoId, setCaixaMovimentacaoId] = useState('');
 
   const [fechamentos, setFechamentos] = useState([]);
-  const [fechamentoSelecionadoId, setFechamentoSelecionadoId] = useState('');
 
   const [caixaFechamentoId, setCaixaFechamentoId] = useState('');
   const [valorAberturaFechamento, setValorAberturaFechamento] = useState('');
@@ -32,6 +32,9 @@ function App() {
   const [horaFechamento, setHoraFechamento] = useState('');
   const [valorEsperadoFechamento, setValorEsperadoFechamento] = useState('');
   const [valorContadoFechamento, setValorContadoFechamento] = useState('');
+  const fechamentosAbertos = fechamentos.filter(
+    (fechamento) => !fechamento.dataHoraFechamento
+  );
 
   useEffect(() => {
     carregarCaixas();
@@ -114,11 +117,16 @@ function App() {
   async function cadastrarMovimentacao(event) {
     event.preventDefault();
 
+    const fechamentoAbertoSelecionado = fechamentosAbertos.find(
+      (fechamento) =>
+        String(fechamento.caixa?.id) === caixaMovimentacaoId
+    );
+
     if (
       valorMovimentacao === '' ||
       dataMovimentacao === '' ||
       horaMovimentacao === '' ||
-      fechamentoSelecionadoId === ''
+      !fechamentoAbertoSelecionado
     ) {
       return;
     }
@@ -157,7 +165,7 @@ function App() {
       setDescricaoMovimentacao('');
       setDataMovimentacao('');
       setHoraMovimentacao('');
-      setFechamentoSelecionadoId('');
+      setCaixaMovimentacaoId('');
       setMovimentacaoEditandoId(null);
 
       return;
@@ -174,7 +182,7 @@ function App() {
         descricao: descricaoMovimentacao.trim(),
         dataHora: dataHora,
         fechamento: {
-          id: Number(fechamentoSelecionadoId)
+          id: fechamentoAbertoSelecionado.id
         }
       })
     });
@@ -188,7 +196,7 @@ function App() {
     setDescricaoMovimentacao('');
     setDataMovimentacao('');
     setHoraMovimentacao('');
-    setFechamentoSelecionadoId('');
+    setCaixaMovimentacaoId('');
   }
 
   async function cadastrarFechamento(event) {
@@ -252,6 +260,16 @@ function App() {
 
       setFechamentoEditandoId(null);
 
+      return;
+    }
+
+    const caixaJaPossuiFechamentoAberto = fechamentosAbertos.some(
+      (fechamento) =>
+        String(fechamento.caixa?.id) === caixaFechamentoId
+    );
+
+    if (caixaJaPossuiFechamentoAberto) {
+      alert('Este caixa já está aberto.');
       return;
     }
 
@@ -364,7 +382,9 @@ function App() {
     setDescricaoMovimentacao(movimentacao.descricao);
     setDataMovimentacao(data);
     setHoraMovimentacao(horaCompleta.slice(0, 5));
-    setFechamentoSelecionadoId(String(movimentacao.fechamento?.id ?? ''));
+    setCaixaMovimentacaoId(
+      String(movimentacao.fechamento?.caixa?.id ?? '')
+    );
   }
 
   function iniciarEdicao(caixa) {
@@ -429,9 +449,12 @@ function App() {
         setDataMovimentacao={setDataMovimentacao}
         horaMovimentacao={horaMovimentacao}
         setHoraMovimentacao={setHoraMovimentacao}
-        fechamentos={fechamentos}
-        fechamentoSelecionadoId={fechamentoSelecionadoId}
-        setFechamentoSelecionadoId={setFechamentoSelecionadoId}
+
+        fechamentosAbertos={fechamentosAbertos}
+        caixaMovimentacaoId={caixaMovimentacaoId}
+        setCaixaMovimentacaoId={setCaixaMovimentacaoId}
+
+
         movimentacaoEditandoId={movimentacaoEditandoId}
         cadastrarMovimentacao={cadastrarMovimentacao}
       />
