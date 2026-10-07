@@ -1,3 +1,5 @@
+import formatarMoeda from '../utils/formatarMoeda';
+
 function MovimentacaoList({
     movimentacoes,
     excluirMovimentacao,
@@ -14,7 +16,7 @@ function MovimentacaoList({
                     {movimentacoes.map((movimentacao) => (
                         <li key={movimentacao.id}>
                             Tipo: {movimentacao.tipo} |
-                            Valor: R$ {movimentacao.valor} |
+                            Valor: {formatarMoeda(movimentacao.valor)} |
                             Descrição: {movimentacao.descricao} |
                             Data: {movimentacao.dataHora} |
                             Fechamento: {movimentacao.fechamento?.id}

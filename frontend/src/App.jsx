@@ -4,6 +4,8 @@ import CaixaForm from './components/CaixaForm';
 import CaixaList from './components/CaixaList';
 import MovimentacaoForm from './components/MovimentacaoForm';
 import MovimentacaoList from './components/MovimentacaoList';
+import FechamentoForm from './components/FechamentoForm';
+import FechamentoList from './components/FechamentoList';
 
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
@@ -20,6 +22,16 @@ function App() {
 
   const [fechamentos, setFechamentos] = useState([]);
   const [fechamentoSelecionadoId, setFechamentoSelecionadoId] = useState('');
+
+  const [caixaFechamentoId, setCaixaFechamentoId] = useState('');
+  const [valorAberturaFechamento, setValorAberturaFechamento] = useState('');
+  const [dataAberturaFechamento, setDataAberturaFechamento] = useState('');
+  const [horaAberturaFechamento, setHoraAberturaFechamento] = useState('');
+  const [fechamentoEditandoId, setFechamentoEditandoId] = useState(null);
+  const [dataFechamento, setDataFechamento] = useState('');
+  const [horaFechamento, setHoraFechamento] = useState('');
+  const [valorEsperadoFechamento, setValorEsperadoFechamento] = useState('');
+  const [valorContadoFechamento, setValorContadoFechamento] = useState('');
 
   useEffect(() => {
     carregarCaixas();
@@ -179,6 +191,170 @@ function App() {
     setFechamentoSelecionadoId('');
   }
 
+  async function cadastrarFechamento(event) {
+    event.preventDefault();
+
+    if (fechamentoEditandoId !== null) {
+      if (
+        dataFechamento === '' ||
+        horaFechamento === '' ||
+        valorEsperadoFechamento === '' ||
+        valorContadoFechamento === ''
+      ) {
+        return;
+      }
+
+      const dataHoraFechamento =
+        `${dataFechamento}T${horaFechamento}:00`;
+
+      const diferenca = Number(
+        (
+          Number(valorContadoFechamento) -
+          Number(valorEsperadoFechamento)
+        ).toFixed(2)
+      );
+
+      const resposta = await fetch(
+        `http://localhost:8080/fechamentos/${fechamentoEditandoId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            dataHoraFechamento: dataHoraFechamento,
+            valorEsperado: Number(valorEsperadoFechamento),
+            valorContado: Number(valorContadoFechamento),
+            diferenca: diferenca
+          })
+        }
+      );
+
+      const fechamentoAtualizado = await resposta.json();
+
+      setFechamentos(
+        fechamentos.map((fechamento) =>
+          fechamento.id === fechamentoEditandoId
+            ? fechamentoAtualizado
+            : fechamento
+        )
+      );
+
+      setCaixaFechamentoId('');
+      setValorAberturaFechamento('');
+      setDataAberturaFechamento('');
+      setHoraAberturaFechamento('');
+
+      setDataFechamento('');
+      setHoraFechamento('');
+      setValorEsperadoFechamento('');
+      setValorContadoFechamento('');
+
+      setFechamentoEditandoId(null);
+
+      return;
+    }
+
+    if (
+      caixaFechamentoId === '' ||
+      valorAberturaFechamento === '' ||
+      dataAberturaFechamento === '' ||
+      horaAberturaFechamento === ''
+    ) {
+      return;
+    }
+
+    const dataHoraAbertura =
+      `${dataAberturaFechamento}T${horaAberturaFechamento}:00`;
+
+    const resposta = await fetch('http://localhost:8080/fechamentos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        dataHoraAbertura: dataHoraAbertura,
+        valorAbertura: Number(valorAberturaFechamento),
+        caixa: {
+          id: Number(caixaFechamentoId)
+        }
+      })
+    });
+
+    const novoFechamento = await resposta.json();
+
+    setFechamentos([...fechamentos, novoFechamento]);
+
+    setCaixaFechamentoId('');
+    setValorAberturaFechamento('');
+    setDataAberturaFechamento('');
+    setHoraAberturaFechamento('');
+  }
+
+  function calcularValorEsperado(fechamento) {
+    const movimentacoesDoFechamento = movimentacoes.filter(
+      (movimentacao) =>
+        movimentacao.fechamento?.id === fechamento.id
+    );
+
+    const valorEsperado = movimentacoesDoFechamento.reduce(
+      (total, movimentacao) => {
+        const valor = Number(movimentacao.valor);
+
+        switch (movimentacao.tipo) {
+          case 'ENTRADA':
+          case 'REFORCO':
+            return total + valor;
+
+          case 'SAIDA':
+          case 'SANGRIA':
+            return total - valor;
+
+          default:
+            return total;
+        }
+      },
+      Number(fechamento.valorAbertura)
+    );
+
+    return Number(valorEsperado.toFixed(2));
+  }
+
+  function iniciarEdicaoFechamento(fechamento) {
+    setFechamentoEditandoId(fechamento.id);
+
+    setCaixaFechamentoId(String(fechamento.caixa?.id ?? ''));
+    setValorAberturaFechamento(String(fechamento.valorAbertura ?? ''));
+
+    if (fechamento.dataHoraAbertura) {
+      const [dataAbertura, horaAbertura] =
+        fechamento.dataHoraAbertura.split('T');
+
+      setDataAberturaFechamento(dataAbertura);
+      setHoraAberturaFechamento(horaAbertura.slice(0, 5));
+    }
+
+    if (fechamento.dataHoraFechamento) {
+      const [data, hora] = fechamento.dataHoraFechamento.split('T');
+
+      setDataFechamento(data);
+      setHoraFechamento(hora.slice(0, 5));
+    } else {
+      setDataFechamento('');
+      setHoraFechamento('');
+    }
+
+    const valorEsperado = calcularValorEsperado(fechamento);
+
+    setValorEsperadoFechamento(String(valorEsperado));
+
+    setValorContadoFechamento(
+      fechamento.valorContado !== null
+        ? String(fechamento.valorContado)
+        : ''
+    );
+  }
+
   function iniciarEdicaoMovimentacao(movimentacao) {
     const [data, horaCompleta] = movimentacao.dataHora.split('T');
 
@@ -194,6 +370,16 @@ function App() {
   function iniciarEdicao(caixa) {
     setCaixaEditandoId(caixa.id);
     setNomeCaixa(caixa.nome);
+  }
+
+  async function excluirFechamento(id) {
+    await fetch(`http://localhost:8080/fechamentos/${id}`, {
+      method: 'DELETE'
+    });
+
+    setFechamentos(
+      fechamentos.filter((fechamento) => fechamento.id !== id)
+    );
   }
 
   async function excluirMovimentacao(id) {
@@ -254,6 +440,38 @@ function App() {
         movimentacoes={movimentacoes}
         excluirMovimentacao={excluirMovimentacao}
         iniciarEdicaoMovimentacao={iniciarEdicaoMovimentacao}
+      />
+
+      <FechamentoForm
+        caixas={caixas}
+        caixaFechamentoId={caixaFechamentoId}
+        setCaixaFechamentoId={setCaixaFechamentoId}
+        valorAberturaFechamento={valorAberturaFechamento}
+        setValorAberturaFechamento={setValorAberturaFechamento}
+        dataAberturaFechamento={dataAberturaFechamento}
+        setDataAberturaFechamento={setDataAberturaFechamento}
+        horaAberturaFechamento={horaAberturaFechamento}
+        setHoraAberturaFechamento={setHoraAberturaFechamento}
+        cadastrarFechamento={cadastrarFechamento}
+
+        fechamentoEditandoId={fechamentoEditandoId}
+
+        dataFechamento={dataFechamento}
+        setDataFechamento={setDataFechamento}
+
+        horaFechamento={horaFechamento}
+        setHoraFechamento={setHoraFechamento}
+
+        valorEsperadoFechamento={valorEsperadoFechamento}
+
+        valorContadoFechamento={valorContadoFechamento}
+        setValorContadoFechamento={setValorContadoFechamento}
+      />
+
+      <FechamentoList
+        fechamentos={fechamentos}
+        excluirFechamento={excluirFechamento}
+        iniciarEdicaoFechamento={iniciarEdicaoFechamento}
       />
 
     </main>

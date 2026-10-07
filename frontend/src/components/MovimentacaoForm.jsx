@@ -35,6 +35,8 @@ function MovimentacaoForm({
 
                 <label htmlFor="valorMovimentacao">Valor</label>
 
+                <span>R$ </span>
+
                 <input
                     id="valorMovimentacao"
                     type="number"
