@@ -11,10 +11,19 @@ function App() {
   const [caixaEditandoId, setCaixaEditandoId] = useState(null);
 
   const [movimentacoes, setMovimentacoes] = useState([]);
+  const [tipoMovimentacao, setTipoMovimentacao] = useState('ENTRADA');
+  const [valorMovimentacao, setValorMovimentacao] = useState('');
+  const [descricaoMovimentacao, setDescricaoMovimentacao] = useState('');
+  const [dataMovimentacao, setDataMovimentacao] = useState('');
+  const [horaMovimentacao, setHoraMovimentacao] = useState('');
+
+  const [fechamentos, setFechamentos] = useState([]);
+  const [fechamentoSelecionadoId, setFechamentoSelecionadoId] = useState('');
 
   useEffect(() => {
     carregarCaixas();
     carregarMovimentacoes();
+    carregarFechamentos();
   }, []);
 
   async function carregarCaixas() {
@@ -29,6 +38,13 @@ function App() {
     const dados = await resposta.json();
 
     setMovimentacoes(dados);
+  }
+
+  async function carregarFechamentos() {
+    const resposta = await fetch('http://localhost:8080/fechamentos');
+    const dados = await resposta.json();
+
+    setFechamentos(dados);
   }
 
   async function cadastrarCaixa(event) {
@@ -113,7 +129,21 @@ function App() {
         iniciarEdicao={iniciarEdicao}
         excluirCaixa={excluirCaixa} />
 
-      <MovimentacaoForm />
+      <MovimentacaoForm
+        tipoMovimentacao={tipoMovimentacao}
+        setTipoMovimentacao={setTipoMovimentacao}
+        valorMovimentacao={valorMovimentacao}
+        setValorMovimentacao={setValorMovimentacao}
+        descricaoMovimentacao={descricaoMovimentacao}
+        setDescricaoMovimentacao={setDescricaoMovimentacao}
+        dataMovimentacao={dataMovimentacao}
+        setDataMovimentacao={setDataMovimentacao}
+        horaMovimentacao={horaMovimentacao}
+        setHoraMovimentacao={setHoraMovimentacao}
+        fechamentos={fechamentos}
+        fechamentoSelecionadoId={fechamentoSelecionadoId}
+        setFechamentoSelecionadoId={setFechamentoSelecionadoId}
+      />
 
       <MovimentacaoList movimentacoes={movimentacoes} />
 
