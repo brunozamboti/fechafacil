@@ -98,6 +98,48 @@ function App() {
     setNomeCaixa('');
   }
 
+  async function cadastrarMovimentacao(event) {
+    event.preventDefault();
+
+    if (
+      valorMovimentacao === '' ||
+      dataMovimentacao === '' ||
+      horaMovimentacao === '' ||
+      fechamentoSelecionadoId === ''
+    ) {
+      return;
+    }
+
+    const dataHora = `${dataMovimentacao}T${horaMovimentacao}:00`;
+
+    const resposta = await fetch('http://localhost:8080/movimentacoes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        tipo: tipoMovimentacao,
+        valor: Number(valorMovimentacao),
+        descricao: descricaoMovimentacao.trim(),
+        dataHora: dataHora,
+        fechamento: {
+          id: Number(fechamentoSelecionadoId)
+        }
+      })
+    });
+
+    const novaMovimentacao = await resposta.json();
+
+    setMovimentacoes([...movimentacoes, novaMovimentacao]);
+
+    setTipoMovimentacao('ENTRADA');
+    setValorMovimentacao('');
+    setDescricaoMovimentacao('');
+    setDataMovimentacao('');
+    setHoraMovimentacao('');
+    setFechamentoSelecionadoId('');
+  }
+
   function iniciarEdicao(caixa) {
     setCaixaEditandoId(caixa.id);
     setNomeCaixa(caixa.nome);
@@ -143,6 +185,7 @@ function App() {
         fechamentos={fechamentos}
         fechamentoSelecionadoId={fechamentoSelecionadoId}
         setFechamentoSelecionadoId={setFechamentoSelecionadoId}
+        cadastrarMovimentacao={cadastrarMovimentacao}
       />
 
       <MovimentacaoList movimentacoes={movimentacoes} />
