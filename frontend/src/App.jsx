@@ -410,9 +410,12 @@ function App() {
     );
   }
   async function excluirMovimentacao(id) {
-    await fetch(`http://localhost:8080/movimentacoes/${id}`, {
-      method: 'DELETE'
-    });
+    const resposta = await fetch(
+      `http://localhost:8080/movimentacoes/${id}`,
+      {
+        method: 'DELETE'
+      }
+    );
 
     if (!resposta.ok) {
       alert('Não foi possível excluir a movimentação.');
@@ -423,6 +426,7 @@ function App() {
       movimentacoes.filter((movimentacao) => movimentacao.id !== id)
     );
   }
+
 
   async function excluirCaixa(id) {
     const resposta = await fetch(
