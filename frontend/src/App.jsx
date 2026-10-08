@@ -393,19 +393,31 @@ function App() {
   }
 
   async function excluirFechamento(id) {
-    await fetch(`http://localhost:8080/fechamentos/${id}`, {
-      method: 'DELETE'
-    });
+    const resposta = await fetch(
+      `http://localhost:8080/fechamentos/${id}`,
+      {
+        method: 'DELETE'
+      }
+    );
+
+    if (!resposta.ok) {
+      alert('Não foi possível excluir o fechamento.');
+      return;
+    }
 
     setFechamentos(
       fechamentos.filter((fechamento) => fechamento.id !== id)
     );
   }
-
   async function excluirMovimentacao(id) {
     await fetch(`http://localhost:8080/movimentacoes/${id}`, {
       method: 'DELETE'
     });
+
+    if (!resposta.ok) {
+      alert('Não foi possível excluir a movimentação.');
+      return;
+    }
 
     setMovimentacoes(
       movimentacoes.filter((movimentacao) => movimentacao.id !== id)
@@ -413,13 +425,22 @@ function App() {
   }
 
   async function excluirCaixa(id) {
-    await fetch(`http://localhost:8080/caixas/${id}`, {
-      method: 'DELETE'
-    });
+    const resposta = await fetch(
+      `http://localhost:8080/caixas/${id}`,
+      {
+        method: 'DELETE'
+      }
+    );
 
-    setCaixas(caixas.filter((caixa) => caixa.id !== id));
+    if (!resposta.ok) {
+      alert('Não foi possível excluir o caixa.');
+      return;
+    }
+
+    setCaixas(
+      caixas.filter((caixa) => caixa.id !== id)
+    );
   }
-
   return (
     <main>
       <header>
