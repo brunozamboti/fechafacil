@@ -21,19 +21,23 @@ function MovimentacaoList({
                             Data: {movimentacao.dataHora} |
                             Fechamento: {movimentacao.fechamento?.id}
 
-                            <button
-                                type="button"
-                                onClick={() => iniciarEdicaoMovimentacao(movimentacao)}
-                            >
-                                Editar
-                            </button>
+                            {!movimentacao.fechamento?.dataHoraFechamento && (
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={() => iniciarEdicaoMovimentacao(movimentacao)}
+                                    >
+                                        Editar
+                                    </button>
 
-                            <button
-                                type="button"
-                                onClick={() => excluirMovimentacao(movimentacao.id)}
-                            >
-                                Excluir
-                            </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => excluirMovimentacao(movimentacao.id)}
+                                    >
+                                        Excluir
+                                    </button>
+                                </>
+                            )}
                         </li>
                     ))}
                 </ul>
