@@ -414,7 +414,7 @@ header p {
   cursor: pointer;
 }
 
-.movimentacao-form button [type="submit"]:hover {
+.movimentacao-form button[type="submit"]:hover {
   filter: brightness(0.95);
 }
 

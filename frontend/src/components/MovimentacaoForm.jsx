@@ -52,7 +52,7 @@ function MovimentacaoForm({
                             id="valorMovimentacao"
                             type="number"
                             step="0.01"
-                            min="0"
+                            min="0.01"
                             placeholder="Ex.: 50.00"
                             value={valorMovimentacao}
                             onChange={(event) =>
