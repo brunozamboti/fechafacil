@@ -1,12 +1,10 @@
 function CaixaList({
-
     caixas,
     iniciarEdicao,
     excluirCaixa
-
 }) {
     return (
-        <div>
+        <div className="caixa-list">
 
             <h3>Caixas cadastrados</h3>
 
@@ -16,27 +14,33 @@ function CaixaList({
                 <ul>
                     {caixas.map((caixa) => (
                         <li key={caixa.id}>
-                            {caixa.nome}
+                            <span className="caixa-nome">
+                                {caixa.nome}
+                            </span>
 
-                            <button
-                                type="button"
-                                onClick={() => iniciarEdicao(caixa)}
-                            >
-                                Editar
-                            </button>
+                            <div className="caixa-acoes">
+                                <button
+                                    className="botao-editar"
+                                    type="button"
+                                    onClick={() => iniciarEdicao(caixa)}
+                                >
+                                    Editar
+                                </button>
 
-                            <button
-                                type="button"
-                                onClick={() => excluirCaixa(caixa.id)}
-                            >
-                                Excluir
-                            </button>
+                                <button
+                                    className="botao-excluir"
+                                    type="button"
+                                    onClick={() => excluirCaixa(caixa.id)}
+                                >
+                                    Excluir
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
             )}
         </div>
-    )
+    );
 }
 
-export default CaixaList
+export default CaixaList;

@@ -1,12 +1,31 @@
+:root {
+  --verde-principal: #78E388;
+  --verde-escuro: #2F8F57;
+  --verde-claro: #EAFBF0;
+
+  --fundo: #ECF8EF;
+  --branco: #FFFFFF;
+
+  --texto-principal: #1F2933;
+  --texto-secundario: #667085;
+
+  --borda: #DDE5E1;
+
+  --vermelho: #D9534F;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+
   font-family: Arial, Helvetica, sans-serif;
-  background-color:  #f5f5f5;
-  color: #222;
+
+  background-color: var(--fundo);
+  color: var(--texto-principal)
 }
 
 button,

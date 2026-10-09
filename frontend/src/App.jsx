@@ -451,76 +451,84 @@ function App() {
         <h1>FechaFácil</h1>
         <p>Sistema de apoio ao fechamento e conferência de caixa.</p>
       </header>
-      <CaixaForm
-        nomeCaixa={nomeCaixa}
-        setNomeCaixa={setNomeCaixa}
-        caixaEditandoId={caixaEditandoId}
-        cadastrarCaixa={cadastrarCaixa}
-      />
 
-      <CaixaList
-        caixas={caixas}
-        iniciarEdicao={iniciarEdicao}
-        excluirCaixa={excluirCaixa} />
+      <section className="card-modulo card-caixas">
+        <CaixaForm
+          nomeCaixa={nomeCaixa}
+          setNomeCaixa={setNomeCaixa}
+          caixaEditandoId={caixaEditandoId}
+          cadastrarCaixa={cadastrarCaixa}
+        />
 
-      <MovimentacaoForm
-        tipoMovimentacao={tipoMovimentacao}
-        setTipoMovimentacao={setTipoMovimentacao}
-        valorMovimentacao={valorMovimentacao}
-        setValorMovimentacao={setValorMovimentacao}
-        descricaoMovimentacao={descricaoMovimentacao}
-        setDescricaoMovimentacao={setDescricaoMovimentacao}
-        dataMovimentacao={dataMovimentacao}
-        setDataMovimentacao={setDataMovimentacao}
-        horaMovimentacao={horaMovimentacao}
-        setHoraMovimentacao={setHoraMovimentacao}
+        <CaixaList
+          caixas={caixas}
+          iniciarEdicao={iniciarEdicao}
+          excluirCaixa={excluirCaixa}
+        />
+      </section>
 
-        fechamentosAbertos={fechamentosAbertos}
-        caixaMovimentacaoId={caixaMovimentacaoId}
-        setCaixaMovimentacaoId={setCaixaMovimentacaoId}
+      <section className="card-modulo card-fechamentos">
+        <FechamentoForm
+          caixas={caixas}
+          caixaFechamentoId={caixaFechamentoId}
+          setCaixaFechamentoId={setCaixaFechamentoId}
+          valorAberturaFechamento={valorAberturaFechamento}
+          setValorAberturaFechamento={setValorAberturaFechamento}
+          dataAberturaFechamento={dataAberturaFechamento}
+          setDataAberturaFechamento={setDataAberturaFechamento}
+          horaAberturaFechamento={horaAberturaFechamento}
+          setHoraAberturaFechamento={setHoraAberturaFechamento}
+          cadastrarFechamento={cadastrarFechamento}
+
+          fechamentoEditandoId={fechamentoEditandoId}
+
+          dataFechamento={dataFechamento}
+          setDataFechamento={setDataFechamento}
+
+          horaFechamento={horaFechamento}
+          setHoraFechamento={setHoraFechamento}
+
+          valorEsperadoFechamento={valorEsperadoFechamento}
+
+          valorContadoFechamento={valorContadoFechamento}
+          setValorContadoFechamento={setValorContadoFechamento}
+        />
+
+        <FechamentoList
+          fechamentos={fechamentos}
+          excluirFechamento={excluirFechamento}
+          iniciarEdicaoFechamento={iniciarEdicaoFechamento}
+        />
+      </section>
+
+      <section className="card-modulo card-movimentacoes">
+        <MovimentacaoForm
+          tipoMovimentacao={tipoMovimentacao}
+          setTipoMovimentacao={setTipoMovimentacao}
+          valorMovimentacao={valorMovimentacao}
+          setValorMovimentacao={setValorMovimentacao}
+          descricaoMovimentacao={descricaoMovimentacao}
+          setDescricaoMovimentacao={setDescricaoMovimentacao}
+          dataMovimentacao={dataMovimentacao}
+          setDataMovimentacao={setDataMovimentacao}
+          horaMovimentacao={horaMovimentacao}
+          setHoraMovimentacao={setHoraMovimentacao}
+
+          fechamentosAbertos={fechamentosAbertos}
+          caixaMovimentacaoId={caixaMovimentacaoId}
+          setCaixaMovimentacaoId={setCaixaMovimentacaoId}
 
 
-        movimentacaoEditandoId={movimentacaoEditandoId}
-        cadastrarMovimentacao={cadastrarMovimentacao}
-      />
+          movimentacaoEditandoId={movimentacaoEditandoId}
+          cadastrarMovimentacao={cadastrarMovimentacao}
+        />
 
-      <MovimentacaoList
-        movimentacoes={movimentacoes}
-        excluirMovimentacao={excluirMovimentacao}
-        iniciarEdicaoMovimentacao={iniciarEdicaoMovimentacao}
-      />
-
-      <FechamentoForm
-        caixas={caixas}
-        caixaFechamentoId={caixaFechamentoId}
-        setCaixaFechamentoId={setCaixaFechamentoId}
-        valorAberturaFechamento={valorAberturaFechamento}
-        setValorAberturaFechamento={setValorAberturaFechamento}
-        dataAberturaFechamento={dataAberturaFechamento}
-        setDataAberturaFechamento={setDataAberturaFechamento}
-        horaAberturaFechamento={horaAberturaFechamento}
-        setHoraAberturaFechamento={setHoraAberturaFechamento}
-        cadastrarFechamento={cadastrarFechamento}
-
-        fechamentoEditandoId={fechamentoEditandoId}
-
-        dataFechamento={dataFechamento}
-        setDataFechamento={setDataFechamento}
-
-        horaFechamento={horaFechamento}
-        setHoraFechamento={setHoraFechamento}
-
-        valorEsperadoFechamento={valorEsperadoFechamento}
-
-        valorContadoFechamento={valorContadoFechamento}
-        setValorContadoFechamento={setValorContadoFechamento}
-      />
-
-      <FechamentoList
-        fechamentos={fechamentos}
-        excluirFechamento={excluirFechamento}
-        iniciarEdicaoFechamento={iniciarEdicaoFechamento}
-      />
+        <MovimentacaoList
+          movimentacoes={movimentacoes}
+          excluirMovimentacao={excluirMovimentacao}
+          iniciarEdicaoMovimentacao={iniciarEdicaoMovimentacao}
+        />
+      </section>
 
     </main>
   );

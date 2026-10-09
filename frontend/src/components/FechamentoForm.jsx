@@ -21,70 +21,89 @@ function FechamentoForm({
     setValorContadoFechamento
 }) {
     return (
-        <div>
-            <h2>Formulário de Fechamento</h2>
+        <div className="fechamento-form">
+            <h2>Abrir / fechar caixa</h2>
 
             <form onSubmit={cadastrarFechamento}>
-                <label htmlFor="caixaFechamento">Caixa</label>
 
-                <select
-                    id="caixaFechamento"
-                    value={caixaFechamentoId}
-                    onChange={(event) => setCaixaFechamentoId(event.target.value)}
-                    disabled={fechamentoEditandoId !== null}
-                >
-                    <option value="">Selecione um caixa</option>
+                <div className="campo">
+                    <label htmlFor="caixaFechamento">Caixa</label>
 
-                    {caixas.map((caixa) => (
-                        <option key={caixa.id} value={caixa.id}>
-                            {caixa.nome}
-                        </option>
-                    ))}
-                </select>
+                    <select
+                        id="caixaFechamento"
+                        value={caixaFechamentoId}
+                        onChange={(event) =>
+                            setCaixaFechamentoId(event.target.value)
+                        }
+                        disabled={fechamentoEditandoId !== null}
+                    >
+                        <option value="">Selecione um caixa</option>
 
-                <label htmlFor="valorAberturaFechamento">
-                    Valor de abertura
-                </label>
+                        {caixas.map((caixa) => (
+                            <option key={caixa.id} value={caixa.id}>
+                                {caixa.nome}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-                <span>R$ </span>
+                <div className="campo">
+                    <label htmlFor="valorAberturaFechamento">
+                        Valor de abertura
+                    </label>
 
-                <input
-                    id="valorAberturaFechamento"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="Ex.: 100.00"
-                    value={valorAberturaFechamento}
-                    onChange={(event) =>
-                        setValorAberturaFechamento(event.target.value)
-                    }
-                    disabled={fechamentoEditandoId !== null}
-                />
+                    <div className="campo-valor">
+                        <span>R$</span>
 
-                <label htmlFor="dataAberturaFechamento">Data</label>
+                        <input
+                            id="valorAberturaFechamento"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="Ex.: 100.00"
+                            value={valorAberturaFechamento}
+                            onChange={(event) =>
+                                setValorAberturaFechamento(event.target.value)
+                            }
+                            disabled={fechamentoEditandoId !== null}
+                        />
+                    </div>
+                </div>
 
-                <input
-                    id="dataAberturaFechamento"
-                    type="date"
-                    value={dataAberturaFechamento}
-                    onChange={(event) =>
-                        setDataAberturaFechamento(event.target.value)
-                    }
-                    disabled={fechamentoEditandoId !== null}
-                />
+                <div className="linha-data-hora">
+                    <div className="campo">
+                        <label htmlFor="dataAberturaFechamento">
+                            Data
+                        </label>
 
-                <label htmlFor="horaAberturaFechamento">Hora</label>
+                        <input
+                            id="dataAberturaFechamento"
+                            type="date"
+                            value={dataAberturaFechamento}
+                            onChange={(event) =>
+                                setDataAberturaFechamento(event.target.value)
+                            }
+                            disabled={fechamentoEditandoId !== null}
+                        />
+                    </div>
 
-                <input
-                    id="horaAberturaFechamento"
-                    type="time"
-                    value={horaAberturaFechamento}
-                    onChange={(event) =>
-                        setHoraAberturaFechamento(event.target.value)
-                    }
-                    disabled={fechamentoEditandoId !== null}
-                />
+                    <div className="campo">
+                        <label htmlFor="horaAberturaFechamento">
+                            Hora
+                        </label>
 
+                        <input
+                            id="horaAberturaFechamento"
+                            type="time"
+                            value={horaAberturaFechamento}
+                            onChange={(event) =>
+                                setHoraAberturaFechamento(event.target.value)
+                            }
+                            disabled={fechamentoEditandoId !== null}
+                        />
+                    </div>
+                </div>
+                
                 {fechamentoEditandoId !== null && (
                     <>
                         <label htmlFor="dataFechamento">Data de fechamento</label>
@@ -112,7 +131,7 @@ function FechamentoForm({
                         </span>
 
                         <label htmlFor="valorContadoFechamento">
-                            Valor contado 
+                            Valor contado
                         </label>
 
                         <span>R$ </span>
