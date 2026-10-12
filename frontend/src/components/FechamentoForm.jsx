@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import ContadorDinheiro from './ContadorDinheiro';
 import formatarMoeda from '../utils/formatarMoeda';
 
 function FechamentoForm({
@@ -20,6 +22,8 @@ function FechamentoForm({
     valorContadoFechamento,
     setValorContadoFechamento
 }) {
+    const [contadorAberto, setContadorAberto] = useState(false);
+
     return (
         <div className="fechamento-form">
             <h2>Abrir / fechar caixa</h2>
@@ -103,62 +107,99 @@ function FechamentoForm({
                         />
                     </div>
                 </div>
-                
+
                 {fechamentoEditandoId !== null && (
                     <>
-                        <label htmlFor="dataFechamento">Data de fechamento</label>
+                        <div className="linha-data-hora">
+                            <div className="campo">
+                                <label htmlFor="dataFechamento">
+                                    Data de fechamento
+                                </label>
 
-                        <input
-                            id="dataFechamento"
-                            type="date"
-                            value={dataFechamento}
-                            onChange={(event) => setDataFechamento(event.target.value)}
-                        />
+                                <input
+                                    id="dataFechamento"
+                                    type="date"
+                                    value={dataFechamento}
+                                    onChange={(event) =>
+                                        setDataFechamento(event.target.value)
+                                    }
+                                />
+                            </div>
 
-                        <label htmlFor="horaFechamento">Hora de fechamento</label>
+                            <div className="campo">
+                                <label htmlFor="horaFechamento">
+                                    Hora de fechamento
+                                </label>
 
-                        <input
-                            id="horaFechamento"
-                            type="time"
-                            value={horaFechamento}
-                            onChange={(event) => setHoraFechamento(event.target.value)}
-                        />
+                                <input
+                                    id="horaFechamento"
+                                    type="time"
+                                    value={horaFechamento}
+                                    onChange={(event) =>
+                                        setHoraFechamento(event.target.value)
+                                    }
+                                />
+                            </div>
+                        </div>
 
-                        <label>Valor esperado</label>
+                        <div className="campo">
+                            <label>Valor esperado</label>
 
-                        <span>
-                            {formatarMoeda(valorEsperadoFechamento)}
-                        </span>
+                            <div className="valor-calculado">
+                                {formatarMoeda(valorEsperadoFechamento)}
+                            </div>
+                        </div>
 
-                        <label htmlFor="valorContadoFechamento">
-                            Valor contado
-                        </label>
+                        <div className="campo">
+                            <label htmlFor="valorContadoFechamento">
+                                Valor contado
+                            </label>
 
-                        <span>R$ </span>
+                            <div className="campo-valor">
+                                <span>R$</span>
 
-                        <input
-                            id="valorContadoFechamento"
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="Ex.: 495.00"
-                            value={valorContadoFechamento}
-                            onChange={(event) =>
-                                setValorContadoFechamento(event.target.value)
-                            }
-                        />
+                                <input
+                                    id="valorContadoFechamento"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    placeholder="Ex.: 495.00"
+                                    value={valorContadoFechamento}
+                                    onChange={(event) =>
+                                        setValorContadoFechamento(event.target.value)
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            className="botao-contar-dinheiro"
+                            onClick={() => setContadorAberto(true)}
+                        >
+                            🧮 Contar dinheiro
+                        </button>
 
                         {valorContadoFechamento !== '' && (
-                            <>
+                            <div className="campo">
                                 <label>Diferença</label>
 
-                                <span>
+                                <div
+                                    className={`valor-calculado ${Number(valorContadoFechamento) -
+                                            Number(valorEsperadoFechamento) < 0
+                                            ? 'diferenca-negativa'
+                                            : Number(valorContadoFechamento) -
+                                                Number(valorEsperadoFechamento) > 0
+                                                ? 'diferenca-positiva'
+                                                : 'diferenca-zero'
+                                        }`}
+                                >
                                     {formatarMoeda(
                                         Number(valorContadoFechamento) -
                                         Number(valorEsperadoFechamento)
                                     )}
-                                </span>
-                            </>
+                                </div>
+                            </div>
                         )}
                     </>
                 )}
@@ -169,6 +210,13 @@ function FechamentoForm({
                         : 'Abrir caixa'}
                 </button>
             </form>
+            <ContadorDinheiro
+                aberto={contadorAberto}
+                onFechar={() => setContadorAberto(false)}
+                onUsarValor={(valor) =>
+                    setValorContadoFechamento(valor.toFixed(2))
+                }
+            />
         </div>
     );
 }
