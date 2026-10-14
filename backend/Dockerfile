@@ -15,4 +15,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/fechafacil-backend-0.0.1-SNAPSHOT.jar app.jar
 
-CMD ["java", "-jar", "app.jar"]
+COPY start.sh ./start.sh
+RUN sed -i 's/\r$//' /app/start.sh
+CMD ["sh", "/app/start.sh"]
