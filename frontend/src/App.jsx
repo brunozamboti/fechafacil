@@ -7,6 +7,9 @@ import MovimentacaoList from './components/MovimentacaoList';
 import FechamentoForm from './components/FechamentoForm';
 import FechamentoList from './components/FechamentoList';
 
+const API_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 function App() {
   const [nomeCaixa, setNomeCaixa] = useState('');
   const [caixas, setCaixas] = useState([]);
@@ -32,6 +35,7 @@ function App() {
   const [horaFechamento, setHoraFechamento] = useState('');
   const [valorEsperadoFechamento, setValorEsperadoFechamento] = useState('');
   const [valorContadoFechamento, setValorContadoFechamento] = useState('');
+
   const fechamentosAbertos = fechamentos.filter(
     (fechamento) => !fechamento.dataHoraFechamento
   );
@@ -43,21 +47,21 @@ function App() {
   }, []);
 
   async function carregarCaixas() {
-    const resposta = await fetch('http://localhost:8080/caixas');
+    const resposta = await fetch(`${API_URL}/caixas`);
     const dados = await resposta.json();
 
     setCaixas(dados);
   }
 
   async function carregarMovimentacoes() {
-    const resposta = await fetch('http://localhost:8080/movimentacoes');
+    const resposta = await fetch(`${API_URL}/movimentacoes`);
     const dados = await resposta.json();
 
     setMovimentacoes(dados);
   }
 
   async function carregarFechamentos() {
-    const resposta = await fetch('http://localhost:8080/fechamentos');
+    const resposta = await fetch(`${API_URL}/fechamentos`);
     const dados = await resposta.json();
 
     setFechamentos(dados);
@@ -72,7 +76,7 @@ function App() {
 
     if (caixaEditandoId !== null) {
       const resposta = await fetch(
-        `http://localhost:8080/caixas/${caixaEditandoId}`,
+        `${API_URL}/caixas/${caixaEditandoId}`,
         {
           method: 'PUT',
           headers: {
@@ -98,7 +102,7 @@ function App() {
       return;
     }
 
-    const resposta = await fetch('http://localhost:8080/caixas', {
+    const resposta = await fetch(`${API_URL}/caixas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -135,7 +139,7 @@ function App() {
 
     if (movimentacaoEditandoId !== null) {
       const resposta = await fetch(
-        `http://localhost:8080/movimentacoes/${movimentacaoEditandoId}`,
+        `${API_URL}/movimentacoes/${movimentacaoEditandoId}`,
         {
           method: 'PUT',
           headers: {
@@ -171,7 +175,7 @@ function App() {
       return;
     }
 
-    const resposta = await fetch('http://localhost:8080/movimentacoes', {
+    const resposta = await fetch(`${API_URL}/movimentacoes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -223,7 +227,7 @@ function App() {
       );
 
       const resposta = await fetch(
-        `http://localhost:8080/fechamentos/${fechamentoEditandoId}`,
+        `${API_URL}/fechamentos/${fechamentoEditandoId}`,
         {
           method: 'PUT',
           headers: {
@@ -285,7 +289,7 @@ function App() {
     const dataHoraAbertura =
       `${dataAberturaFechamento}T${horaAberturaFechamento}:00`;
 
-    const resposta = await fetch('http://localhost:8080/fechamentos', {
+    const resposta = await fetch(`${API_URL}/fechamentos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -394,7 +398,7 @@ function App() {
 
   async function excluirFechamento(id) {
     const resposta = await fetch(
-      `http://localhost:8080/fechamentos/${id}`,
+      `${API_URL}/fechamentos/${id}`,
       {
         method: 'DELETE'
       }
@@ -409,9 +413,10 @@ function App() {
       fechamentos.filter((fechamento) => fechamento.id !== id)
     );
   }
+
   async function excluirMovimentacao(id) {
     const resposta = await fetch(
-      `http://localhost:8080/movimentacoes/${id}`,
+      `${API_URL}/movimentacoes/${id}`,
       {
         method: 'DELETE'
       }
@@ -427,10 +432,9 @@ function App() {
     );
   }
 
-
   async function excluirCaixa(id) {
     const resposta = await fetch(
-      `http://localhost:8080/caixas/${id}`,
+      `${API_URL}/caixas/${id}`,
       {
         method: 'DELETE'
       }
@@ -445,6 +449,7 @@ function App() {
       caixas.filter((caixa) => caixa.id !== id)
     );
   }
+
   return (
     <main>
       <header>
@@ -479,17 +484,12 @@ function App() {
           horaAberturaFechamento={horaAberturaFechamento}
           setHoraAberturaFechamento={setHoraAberturaFechamento}
           cadastrarFechamento={cadastrarFechamento}
-
           fechamentoEditandoId={fechamentoEditandoId}
-
           dataFechamento={dataFechamento}
           setDataFechamento={setDataFechamento}
-
           horaFechamento={horaFechamento}
           setHoraFechamento={setHoraFechamento}
-
           valorEsperadoFechamento={valorEsperadoFechamento}
-
           valorContadoFechamento={valorContadoFechamento}
           setValorContadoFechamento={setValorContadoFechamento}
         />
@@ -513,12 +513,9 @@ function App() {
           setDataMovimentacao={setDataMovimentacao}
           horaMovimentacao={horaMovimentacao}
           setHoraMovimentacao={setHoraMovimentacao}
-
           fechamentosAbertos={fechamentosAbertos}
           caixaMovimentacaoId={caixaMovimentacaoId}
           setCaixaMovimentacaoId={setCaixaMovimentacaoId}
-
-
           movimentacaoEditandoId={movimentacaoEditandoId}
           cadastrarMovimentacao={cadastrarMovimentacao}
         />
@@ -529,7 +526,6 @@ function App() {
           iniciarEdicaoMovimentacao={iniciarEdicaoMovimentacao}
         />
       </section>
-
     </main>
   );
 }
