@@ -41,31 +41,31 @@ function App() {
   );
 
   useEffect(() => {
+    async function carregarCaixas() {
+      const resposta = await fetch(`${API_URL}/caixas`);
+      const dados = await resposta.json();
+
+      setCaixas(dados);
+    }
+
+    async function carregarMovimentacoes() {
+      const resposta = await fetch(`${API_URL}/movimentacoes`);
+      const dados = await resposta.json();
+
+      setMovimentacoes(dados);
+    }
+
+    async function carregarFechamentos() {
+      const resposta = await fetch(`${API_URL}/fechamentos`);
+      const dados = await resposta.json();
+
+      setFechamentos(dados);
+    }
+
     carregarCaixas();
     carregarMovimentacoes();
     carregarFechamentos();
   }, []);
-
-  async function carregarCaixas() {
-    const resposta = await fetch(`${API_URL}/caixas`);
-    const dados = await resposta.json();
-
-    setCaixas(dados);
-  }
-
-  async function carregarMovimentacoes() {
-    const resposta = await fetch(`${API_URL}/movimentacoes`);
-    const dados = await resposta.json();
-
-    setMovimentacoes(dados);
-  }
-
-  async function carregarFechamentos() {
-    const resposta = await fetch(`${API_URL}/fechamentos`);
-    const dados = await resposta.json();
-
-    setFechamentos(dados);
-  }
 
   async function cadastrarCaixa(event) {
     event.preventDefault();
